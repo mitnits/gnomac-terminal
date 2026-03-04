@@ -1315,6 +1315,10 @@ terminal_screen_profile_changed_cb (GSettings     *profile,
   if (!prop_name || prop_name == I_(TERMINAL_PROFILE_AUDIBLE_BELL_KEY))
       vte_terminal_set_audible_bell (vte_terminal, g_settings_get_boolean (profile, TERMINAL_PROFILE_AUDIBLE_BELL_KEY));
 
+  if (!prop_name || prop_name == I_(TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY))
+    vte_terminal_set_mac_modifier_remap (vte_terminal,
+                                          g_settings_get_boolean (profile, TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY));
+
   if (!prop_name || prop_name == I_(TERMINAL_PROFILE_SCROLL_ON_INSERT_KEY))
     vte_terminal_set_scroll_on_insert(vte_terminal,
                                       g_settings_get_boolean(profile, TERMINAL_PROFILE_SCROLL_ON_INSERT_KEY));

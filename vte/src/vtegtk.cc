@@ -1189,6 +1189,9 @@ try
                 case PROP_YFILL:
                         g_value_set_boolean(value, vte_terminal_get_yfill(terminal));
                         break;
+                case PROP_MAC_MODIFIER_REMAP:
+                        g_value_set_boolean(value, vte_terminal_get_mac_modifier_remap(terminal));
+                        break;
                 default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			return;
@@ -1340,6 +1343,10 @@ try
 
                 case PROP_YFILL:
                         vte_terminal_set_yfill(terminal, g_value_get_boolean(value));
+                        break;
+
+                case PROP_MAC_MODIFIER_REMAP:
+                        vte_terminal_set_mac_modifier_remap(terminal, g_value_get_boolean(value));
                         break;
 
                         /* Not writable */
@@ -2944,6 +2951,17 @@ vte_terminal_class_init(VteTerminalClass *klass)
         pspecs[PROP_ENABLE_LEGACY_OSC777] =
                 g_param_spec_boolean("enable-legacy-osc777", nullptr, nullptr,
                                      false,
+                                     GParamFlags(G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
+
+        /**
+         * VteTerminal:mac-modifier-remap:
+         *
+         * Controls whether Ctrl and Alt modifier masks are swapped for PTY input.
+         * Designed for users who swap Ctrl/Alt at the OS level for Mac-style shortcuts.
+         */
+        pspecs[PROP_MAC_MODIFIER_REMAP] =
+                g_param_spec_boolean("mac-modifier-remap", nullptr, nullptr,
+                                     FALSE,
                                      GParamFlags(G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
 
         g_object_class_install_properties(gobject_class, LAST_PROP, pspecs);
@@ -7558,6 +7576,47 @@ try
 {
     g_return_val_if_fail(VTE_IS_TERMINAL(terminal), false);
     return IMPL(terminal)->m_scroll_on_keystroke;
+}
+catch (...)
+{
+        vte::log_exception();
+        return false;
+}
+
+/**
+ * vte_terminal_set_mac_modifier_remap:
+ * @terminal: a #VteTerminal
+ * @remap: whether to swap Ctrl and Alt modifiers
+ *
+ * Controls whether Ctrl and Alt modifier masks are swapped for PTY input.
+ */
+void
+vte_terminal_set_mac_modifier_remap(VteTerminal *terminal,
+                                     gboolean remap) noexcept
+try
+{
+	g_return_if_fail(VTE_IS_TERMINAL(terminal));
+
+        if (IMPL(terminal)->set_mac_modifier_remap(remap != FALSE))
+                g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_MAC_MODIFIER_REMAP]);
+}
+catch (...)
+{
+        vte::log_exception();
+}
+
+/**
+ * vte_terminal_get_mac_modifier_remap:
+ * @terminal: a #VteTerminal
+ *
+ * Returns: whether Ctrl and Alt modifiers are swapped for PTY input.
+ */
+gboolean
+vte_terminal_get_mac_modifier_remap(VteTerminal *terminal) noexcept
+try
+{
+    g_return_val_if_fail(VTE_IS_TERMINAL(terminal), false);
+    return IMPL(terminal)->m_mac_modifier_remap;
 }
 catch (...)
 {

@@ -355,17 +355,22 @@
       <default>'narrow'</default>
       <summary>Whether ambiguous-width characters are narrow or wide when using UTF-8 encoding</summary>
     </key>
+    <key name="mac-modifier-remap" type="b">
+      <default>false</default>
+      <summary>Swap Ctrl and Alt modifiers for PTY input</summary>
+      <description>When enabled, swaps Ctrl and Alt modifier interpretation. Designed for users who swap Ctrl/Alt at the OS level for Mac-style shortcuts. Alt+key sends Ctrl sequences to the PTY; Ctrl+key sends Alt/Esc sequences.</description>
+    </key>
   </schema>
 
   <!-- Keybinding settings -->
 
   <schema id="org.gnome.GnomacTerminal.Legacy.Keybindings">
     <key name="new-tab" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;t'</default>
+      <default>'&lt;Control&gt;t'</default>
       <summary>Keyboard shortcut to open a new tab</summary>
     </key>
     <key name="new-window" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;n'</default>
+      <default>'&lt;Control&gt;n'</default>
       <summary>Keyboard shortcut to open a new window</summary>
     </key>
     <key name="save-contents" type="s">
@@ -381,15 +386,15 @@
       <summary>Keyboard shortcut to print the current tab contents to printer or file</summary>
     </key>
     <key name="close-tab" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;w'</default>
+      <default>'&lt;Control&gt;w'</default>
       <summary>Keyboard shortcut to close a tab</summary>
     </key>
     <key name="close-window" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;q'</default>
+      <default>'&lt;Control&gt;q'</default>
       <summary>Keyboard shortcut to close a window</summary>
     </key>
     <key name="copy" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;c'</default>
+      <default>'&lt;Control&gt;c'</default>
       <summary>Keyboard shortcut to copy text</summary>
     </key>
     <key name="copy-html" type="s">
@@ -397,7 +402,7 @@
       <summary>Keyboard shortcut to copy text as HTML</summary>
     </key>
     <key name="paste" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;v'</default>
+      <default>'&lt;Control&gt;v'</default>
       <summary>Keyboard shortcut to paste text</summary>
     </key>
     <key name="select-all" type="s">
@@ -429,19 +434,19 @@
       <summary>Keyboard shortcut to reset and clear the terminal</summary>
     </key>
     <key name="find" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;F'</default>
+      <default>'&lt;Control&gt;f'</default>
       <summary>Keyboard shortcut to open the search dialog</summary>
     </key>
     <key name="find-next" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;G'</default>
+      <default>'&lt;Control&gt;g'</default>
       <summary>Keyboard shortcut to find the next occurrence of the search term</summary>
     </key>
     <key name="find-previous" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;H'</default>
+      <default>'&lt;Control&gt;&lt;Shift&gt;g'</default>
       <summary>Keyboard shortcut to find the previous occurrence of the search term</summary>
     </key>
     <key name="find-clear" type="s">
-      <default>'&lt;Control&gt;&lt;Shift&gt;J'</default>
+      <default>'disabled'</default>
       <summary>Keyboard shortcut to clear the find highlighting</summary>
     </key>
     <key name="prev-tab" type="s">

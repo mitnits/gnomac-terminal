@@ -105,6 +105,7 @@ enum {
         PROP_YALIGN,
         PROP_XFILL,
         PROP_YFILL,
+        PROP_MAC_MODIFIER_REMAP,
         LAST_PROP,
 
         /* override properties */

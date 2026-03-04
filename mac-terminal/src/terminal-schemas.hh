@@ -61,6 +61,7 @@ G_BEGIN_DECLS
 #define TERMINAL_PROFILE_HIGHLIGHT_BACKGROUND_COLOR_KEY "highlight-background-color"
 #define TERMINAL_PROFILE_HIGHLIGHT_FOREGROUND_COLOR_KEY "highlight-foreground-color"
 #define TERMINAL_PROFILE_LOGIN_SHELL_KEY                "login-shell"
+#define TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY        "mac-modifier-remap"
 #define TERMINAL_PROFILE_NAME_KEY                       "name"
 #define TERMINAL_PROFILE_PALETTE_KEY                    "palette"
 #define TERMINAL_PROFILE_PRESERVE_WORKING_DIRECTORY_KEY "preserve-working-directory"

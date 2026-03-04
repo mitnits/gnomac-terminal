@@ -5066,6 +5066,16 @@ Terminal::widget_key_press(vte::platform::KeyEvent const& event)
                 keyval = event.keyval();
                 m_modifiers = event.modifiers();
 
+                /* Mac modifier remap: swap Ctrl ↔ Alt */
+                if (m_mac_modifier_remap) {
+                        unsigned new_mods = m_modifiers & ~(GDK_CONTROL_MASK | VTE_ALT_MASK);
+                        if (m_modifiers & GDK_CONTROL_MASK)
+                                new_mods |= VTE_ALT_MASK;
+                        if (m_modifiers & VTE_ALT_MASK)
+                                new_mods |= GDK_CONTROL_MASK;
+                        m_modifiers = new_mods;
+                }
+
                 // FIXMEchpe?
 		if (m_cursor_blink_timer) {
 			remove_cursor_timeout();
@@ -10383,6 +10393,16 @@ Terminal::set_scroll_on_keystroke(bool scroll)
                 return false;
 
         m_scroll_on_keystroke = scroll;
+        return true;
+}
+
+bool
+Terminal::set_mac_modifier_remap(bool remap)
+{
+        if (remap == m_mac_modifier_remap)
+                return false;
+
+        m_mac_modifier_remap = remap;
         return true;
 }
 
