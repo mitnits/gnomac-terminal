@@ -1,0 +1,8 @@
+gnomac-terminal (3.56.2-1) unstable; urgency=medium
+
+  * Initial release of GnomacTerminal fork
+  * Based on gnome-terminal 3.56.2 with VTE 0.80.1
+  * Renamed to org.gnome.GnomacTerminal to coexist with system gnome-terminal
+  * Bundled private VTE library (libvte-gnomac-2.91)
+
+ -- GnomacTerminal Developer <dev@example.com>  Tue, 04 Mar 2026 12:00:00 +0000

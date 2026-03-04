@@ -1,0 +1,14 @@
+# Build artifacts
+vte/builddir/
+vte/install/
+mac-terminal/builddir/
+*.deb
+
+# Editor files
+*.swp
+*~
+.vscode/
+.idea/
+
+# Claude
+.claude/

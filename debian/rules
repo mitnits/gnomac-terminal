@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+BASEDIR = $(CURDIR)
+VTE_STAGING = $(BASEDIR)/vte/install/usr
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	# Step 1: Build VTE as private library
+	cd $(BASEDIR)/vte && \
+		meson setup builddir --prefix=/usr \
+			--libdir=lib/gnomac-terminal \
+			-Dgtk3=true -Dgtk4=false \
+			-Dgir=false -Dvapi=false -Ddocs=false || true
+	cd $(BASEDIR)/vte && meson compile -C builddir
+	rm -rf $(VTE_STAGING)
+	cd $(BASEDIR)/vte && DESTDIR=$(BASEDIR)/vte/install meson install -C builddir
+	# Create build-time pkg-config with staging paths
+	sed -i "s|^prefix=.*|prefix=$(VTE_STAGING)|" \
+		$(VTE_STAGING)/lib/gnomac-terminal/pkgconfig/vte-gnomac-2.91.pc
+	# Step 2: Configure GnomacTerminal
+	cd $(BASEDIR)/mac-terminal && \
+		PKG_CONFIG_PATH=$(VTE_STAGING)/lib/gnomac-terminal/pkgconfig:$$PKG_CONFIG_PATH \
+		meson setup builddir --prefix=/usr \
+			-Dnautilus_extension=false \
+			-Dsearch_provider=true \
+			-Ddocs=false || true
+
+override_dh_auto_build:
+	cd $(BASEDIR)/mac-terminal && \
+		LD_LIBRARY_PATH=$(VTE_STAGING)/lib/gnomac-terminal:$$LD_LIBRARY_PATH \
+		meson compile -C builddir
+
+override_dh_auto_install:
+	# Install GnomacTerminal
+	cd $(BASEDIR)/mac-terminal && \
+		DESTDIR=$(BASEDIR)/debian/gnomac-terminal meson install -C builddir
+	# Install private VTE library
+	install -d $(BASEDIR)/debian/gnomac-terminal/usr/lib/gnomac-terminal
+	cp -a $(VTE_STAGING)/lib/gnomac-terminal/libvte-gnomac-2.91.so* \
+		$(BASEDIR)/debian/gnomac-terminal/usr/lib/gnomac-terminal/
+
+override_dh_auto_test:
+	# Skip tests during package build
+
+override_dh_shlibdeps:
+	dh_shlibdeps -l$(BASEDIR)/debian/gnomac-terminal/usr/lib/gnomac-terminal
+
+override_dh_auto_clean:
+	rm -rf $(BASEDIR)/vte/builddir $(BASEDIR)/vte/install
+	rm -rf $(BASEDIR)/mac-terminal/builddir

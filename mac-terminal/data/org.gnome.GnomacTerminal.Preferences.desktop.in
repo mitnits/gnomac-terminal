@@ -1,0 +1,14 @@
+[Desktop Entry]
+Categories=GNOME;GTK;System;TerminalEmulator;
+Comment=Configure the command line
+DBusActivatable=false
+Exec=gnomac-terminal --preferences
+Icon=org.gnome.GnomacTerminal.Preferences
+Keywords=shell;prompt;command;commandline;cmd;
+Name=GnomacTerminal Preferences
+NoDisplay=true
+SingleMainWindow=true
+StartupNotify=true
+StartupWMClass=Gnomac-terminal-preferences
+TryExec=gnomac-terminal
+Type=Application
