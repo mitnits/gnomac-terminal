@@ -356,7 +356,7 @@
       <summary>Whether ambiguous-width characters are narrow or wide when using UTF-8 encoding</summary>
     </key>
     <key name="mac-modifier-remap" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Swap Ctrl and Alt modifiers for PTY input</summary>
       <description>When enabled, swaps Ctrl and Alt modifier interpretation. Designed for users who swap Ctrl/Alt at the OS level for Mac-style shortcuts. Alt+key sends Ctrl sequences to the PTY; Ctrl+key sends Alt/Esc sequences.</description>
     </key>
