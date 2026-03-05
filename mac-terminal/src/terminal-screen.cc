@@ -1007,6 +1007,11 @@ terminal_screen_new (GSettings       *profile,
 
   terminal_screen_set_profile (screen, profile);
 
+  /* Apply mac modifier remap from global setting */
+  GSettings *global = terminal_app_get_global_settings (terminal_app_get ());
+  vte_terminal_set_swap_alt_and_ctrl (VTE_TERMINAL (screen),
+    g_settings_get_boolean (global, TERMINAL_SETTING_MAC_MODIFIER_REMAP_KEY));
+
   vte_terminal_set_size (VTE_TERMINAL (screen),
                          g_settings_get_int (profile, TERMINAL_PROFILE_DEFAULT_SIZE_COLUMNS_KEY),
                          g_settings_get_int (profile, TERMINAL_PROFILE_DEFAULT_SIZE_ROWS_KEY));
@@ -1314,10 +1319,6 @@ terminal_screen_profile_changed_cb (GSettings     *profile,
 
   if (!prop_name || prop_name == I_(TERMINAL_PROFILE_AUDIBLE_BELL_KEY))
       vte_terminal_set_audible_bell (vte_terminal, g_settings_get_boolean (profile, TERMINAL_PROFILE_AUDIBLE_BELL_KEY));
-
-  if (!prop_name || prop_name == I_(TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY))
-    vte_terminal_set_mac_modifier_remap (vte_terminal,
-                                          g_settings_get_boolean (profile, TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY));
 
   if (!prop_name || prop_name == I_(TERMINAL_PROFILE_SCROLL_ON_INSERT_KEY))
     vte_terminal_set_scroll_on_insert(vte_terminal,

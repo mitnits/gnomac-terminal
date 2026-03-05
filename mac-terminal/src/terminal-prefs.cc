@@ -737,6 +737,7 @@ terminal_prefs_show_preferences(GSettings* profile,
   GtkWidget *close_button, *help_button;
   GtkWidget *content_box, *general_frame, *keybindings_frame;
   GtkWidget *always_check_default_button, *make_default_button;
+  GtkWidget *mac_modifier_remap_button;
   GSettings *settings;
 
   const GActionEntry action_entries[] = {
@@ -774,6 +775,7 @@ terminal_prefs_show_preferences(GSettings* profile,
                                        "new-tab-position-combobox", &new_tab_position_combo,
                                        "always-check-default-checkbutton", &always_check_default_button,
                                        "make-default-button", &make_default_button,
+                                       "mac-modifier-remap-checkbutton", &mac_modifier_remap_button,
                                        "accelerators-treeview", &tree_view,
                                        "the-stack", &data->stack,
                                        "the-listbox", &data->listbox,
@@ -863,6 +865,12 @@ terminal_prefs_show_preferences(GSettings* profile,
   g_settings_bind (settings,
                    TERMINAL_SETTING_ENABLE_MENU_BAR_ACCEL_KEY,
                    disable_menu_accel_button,
+                   "active",
+                   GSettingsBindFlags(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET));
+
+  g_settings_bind (settings,
+                   TERMINAL_SETTING_MAC_MODIFIER_REMAP_KEY,
+                   mac_modifier_remap_button,
                    "active",
                    GSettingsBindFlags(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET));
 

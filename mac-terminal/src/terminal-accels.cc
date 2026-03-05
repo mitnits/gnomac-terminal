@@ -244,6 +244,7 @@ enum
 
 static GHashTable *settings_key_to_entry;
 static GSettings *keybinding_settings = nullptr;
+static gboolean mac_modifier_remap_enabled = FALSE;
 
 GS_DEFINE_CLEANUP_FUNCTION(GtkTreePath*, _terminal_local_free_tree_path, gtk_tree_path_free)
 #define terminal_free_tree_path __attribute__((__cleanup__(_terminal_local_free_tree_path)))
@@ -258,13 +259,29 @@ binding_name (guint            keyval,
   return g_strdup ("disabled");
 }
 
+/* If the accel string contains <Shift>, return a new string with <Shift> removed.
+ * Returns NULL if no Shift modifier was present. Caller must g_free() the result. */
+static char *
+strip_shift_from_accel (const char *accel)
+{
+  guint key;
+  GdkModifierType mods;
+
+  gtk_accelerator_parse (accel, &key, &mods);
+  if (key == 0 || !(mods & GDK_SHIFT_MASK))
+    return nullptr;
+
+  mods = (GdkModifierType)(mods & ~GDK_SHIFT_MASK);
+  return gtk_accelerator_name (key, mods);
+}
+
 static void
 key_changed_cb (GSettings *settings,
                 const char *settings_key,
                 gpointer user_data)
 {
   GtkApplication *application = (GtkApplication*)user_data;
-  const gchar *accels[2] = { nullptr, nullptr };
+  const gchar *accels[3] = { nullptr, nullptr, nullptr };
 
   _terminal_debug_print (TERMINAL_DEBUG_ACCELS,
                          "key %s changed\n",
@@ -297,10 +314,22 @@ key_changed_cb (GSettings *settings,
    * the real action and gets activated when the shadowed action is disabled.
    */
 
+  gs_free char *secondary = nullptr;
+
   if (g_str_equal (value, "disabled")) {
     accels[0] = nullptr;
   } else {
     accels[0] = value;
+
+    /* When mac-modifier-remap is enabled, add a secondary accelerator
+     * with Shift stripped (e.g. <Ctrl><Shift>c also gets <Ctrl>c).
+     * This allows the remapped physical Alt key to trigger shortcuts
+     * without requiring Shift. */
+    if (mac_modifier_remap_enabled) {
+      secondary = strip_shift_from_accel (value);
+      if (secondary)
+        accels[1] = secondary;
+    }
   }
 
   gtk_application_set_accels_for_action (application,
@@ -393,6 +422,27 @@ terminal_accels_shutdown (void)
 
   g_clear_pointer (&settings_key_to_entry, (GDestroyNotify) g_hash_table_unref);
   g_clear_object (&keybinding_settings);
+}
+
+void
+terminal_accels_set_mac_modifier_remap (gboolean enabled)
+{
+  if (mac_modifier_remap_enabled == enabled)
+    return;
+
+  mac_modifier_remap_enabled = enabled;
+
+  /* Re-apply all keybindings so secondary accelerators are added or removed */
+  if (settings_key_to_entry && keybinding_settings) {
+    GtkApplication *application = GTK_APPLICATION (g_application_get_default ());
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init (&iter, settings_key_to_entry);
+    while (g_hash_table_iter_next (&iter, &key, &value)) {
+      key_changed_cb (keybinding_settings, (const char *)key, application);
+    }
+  }
 }
 
 static gboolean

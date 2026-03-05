@@ -29,6 +29,8 @@ void terminal_accels_init (GApplication *application,
 
 void terminal_accels_shutdown (void);
 
+void terminal_accels_set_mac_modifier_remap (gboolean enabled);
+
 void terminal_accels_fill_treeview (GtkWidget *treeview,
                                     GtkWidget *disable_shortcuts_button);
 

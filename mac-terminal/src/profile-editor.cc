@@ -1518,12 +1518,6 @@ profile_prefs_load (const char *uuid, GSettings *profile)
 			       GSettingsBindFlags(G_SETTINGS_BIND_GET |
 						  G_SETTINGS_BIND_SET));
   gtk_widget_set_visible (w, (vte_get_feature_flags() & VTE_FEATURE_FLAG_SIXEL) != 0);
-
-  w = (GtkWidget *) gtk_builder_get_object (builder, "mac-modifier-remap-checkbutton");
-  profile_prefs_settings_bind (profile, TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY, w,
-                               "active",
-			       GSettingsBindFlags(G_SETTINGS_BIND_GET |
-						  G_SETTINGS_BIND_SET));
 }
 
 /* Called once per Preferences window, to destroy stuff that doesn't depend on the profile being edited */

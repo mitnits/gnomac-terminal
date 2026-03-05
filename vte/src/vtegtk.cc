@@ -1189,8 +1189,8 @@ try
                 case PROP_YFILL:
                         g_value_set_boolean(value, vte_terminal_get_yfill(terminal));
                         break;
-                case PROP_MAC_MODIFIER_REMAP:
-                        g_value_set_boolean(value, vte_terminal_get_mac_modifier_remap(terminal));
+                case PROP_SWAP_ALT_AND_CTRL:
+                        g_value_set_boolean(value, vte_terminal_get_swap_alt_and_ctrl(terminal));
                         break;
                 default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1345,8 +1345,8 @@ try
                         vte_terminal_set_yfill(terminal, g_value_get_boolean(value));
                         break;
 
-                case PROP_MAC_MODIFIER_REMAP:
-                        vte_terminal_set_mac_modifier_remap(terminal, g_value_get_boolean(value));
+                case PROP_SWAP_ALT_AND_CTRL:
+                        vte_terminal_set_swap_alt_and_ctrl(terminal, g_value_get_boolean(value));
                         break;
 
                         /* Not writable */
@@ -2954,13 +2954,13 @@ vte_terminal_class_init(VteTerminalClass *klass)
                                      GParamFlags(G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
 
         /**
-         * VteTerminal:mac-modifier-remap:
+         * VteTerminal:swap-alt-and-ctrl:
          *
          * Controls whether Ctrl and Alt modifier masks are swapped for PTY input.
          * Designed for users who swap Ctrl/Alt at the OS level for Mac-style shortcuts.
          */
-        pspecs[PROP_MAC_MODIFIER_REMAP] =
-                g_param_spec_boolean("mac-modifier-remap", nullptr, nullptr,
+        pspecs[PROP_SWAP_ALT_AND_CTRL] =
+                g_param_spec_boolean("swap-alt-and-ctrl", nullptr, nullptr,
                                      FALSE,
                                      GParamFlags(G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
 
@@ -7584,21 +7584,21 @@ catch (...)
 }
 
 /**
- * vte_terminal_set_mac_modifier_remap:
+ * vte_terminal_set_swap_alt_and_ctrl:
  * @terminal: a #VteTerminal
  * @remap: whether to swap Ctrl and Alt modifiers
  *
  * Controls whether Ctrl and Alt modifier masks are swapped for PTY input.
  */
 void
-vte_terminal_set_mac_modifier_remap(VteTerminal *terminal,
+vte_terminal_set_swap_alt_and_ctrl(VteTerminal *terminal,
                                      gboolean remap) noexcept
 try
 {
 	g_return_if_fail(VTE_IS_TERMINAL(terminal));
 
-        if (IMPL(terminal)->set_mac_modifier_remap(remap != FALSE))
-                g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_MAC_MODIFIER_REMAP]);
+        if (IMPL(terminal)->set_swap_alt_and_ctrl(remap != FALSE))
+                g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_SWAP_ALT_AND_CTRL]);
 }
 catch (...)
 {
@@ -7606,17 +7606,17 @@ catch (...)
 }
 
 /**
- * vte_terminal_get_mac_modifier_remap:
+ * vte_terminal_get_swap_alt_and_ctrl:
  * @terminal: a #VteTerminal
  *
  * Returns: whether Ctrl and Alt modifiers are swapped for PTY input.
  */
 gboolean
-vte_terminal_get_mac_modifier_remap(VteTerminal *terminal) noexcept
+vte_terminal_get_swap_alt_and_ctrl(VteTerminal *terminal) noexcept
 try
 {
     g_return_val_if_fail(VTE_IS_TERMINAL(terminal), false);
-    return IMPL(terminal)->m_mac_modifier_remap;
+    return IMPL(terminal)->m_swap_alt_and_ctrl;
 }
 catch (...)
 {

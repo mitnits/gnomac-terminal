@@ -498,7 +498,7 @@ public:
         bool m_scroll_on_insert{false};
         bool m_scroll_on_output{false};
         bool m_scroll_on_keystroke{true};
-        bool m_mac_modifier_remap{false};
+        bool m_swap_alt_and_ctrl{false};
         vte::grid::row_t m_scrollback_lines{0};
 
         inline auto scroll_limit_lower() const noexcept
@@ -1638,7 +1638,7 @@ public:
         bool set_scroll_on_insert(bool scroll);
         bool set_scroll_on_keystroke(bool scroll);
         bool set_scroll_on_output(bool scroll);
-        bool set_mac_modifier_remap(bool remap);
+        bool set_swap_alt_and_ctrl(bool remap);
         bool set_images_enabled(bool enabled);
         bool set_word_char_exceptions(std::optional<std::string_view> stropt);
         void set_clear_background(bool setting);

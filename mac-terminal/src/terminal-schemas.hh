@@ -61,7 +61,6 @@ G_BEGIN_DECLS
 #define TERMINAL_PROFILE_HIGHLIGHT_BACKGROUND_COLOR_KEY "highlight-background-color"
 #define TERMINAL_PROFILE_HIGHLIGHT_FOREGROUND_COLOR_KEY "highlight-foreground-color"
 #define TERMINAL_PROFILE_LOGIN_SHELL_KEY                "login-shell"
-#define TERMINAL_PROFILE_MAC_MODIFIER_REMAP_KEY        "mac-modifier-remap"
 #define TERMINAL_PROFILE_NAME_KEY                       "name"
 #define TERMINAL_PROFILE_PALETTE_KEY                    "palette"
 #define TERMINAL_PROFILE_PRESERVE_WORKING_DIRECTORY_KEY "preserve-working-directory"
@@ -95,6 +94,7 @@ G_BEGIN_DECLS
 #define TERMINAL_SETTING_TAB_POSITION_KEY               "tab-position"
 #define TERMINAL_SETTING_THEME_VARIANT_KEY              "theme-variant"
 #define TERMINAL_SETTING_UNIFIED_MENU_KEY               "unified-menu"
+#define TERMINAL_SETTING_MAC_MODIFIER_REMAP_KEY         "mac-modifier-remap"
 #define TERMINAL_SETTING_ALWAYS_CHECK_DEFAULT_KEY       "always-check-default-terminal"
 
 #define TERMINAL_SETTINGS_LIST_LIST_KEY                 "list"

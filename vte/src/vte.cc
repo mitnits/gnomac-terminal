@@ -5067,7 +5067,7 @@ Terminal::widget_key_press(vte::platform::KeyEvent const& event)
                 m_modifiers = event.modifiers();
 
                 /* Mac modifier remap: swap Ctrl ↔ Alt */
-                if (m_mac_modifier_remap) {
+                if (m_swap_alt_and_ctrl) {
                         unsigned new_mods = m_modifiers & ~(GDK_CONTROL_MASK | VTE_ALT_MASK);
                         if (m_modifiers & GDK_CONTROL_MASK)
                                 new_mods |= VTE_ALT_MASK;
@@ -10397,12 +10397,12 @@ Terminal::set_scroll_on_keystroke(bool scroll)
 }
 
 bool
-Terminal::set_mac_modifier_remap(bool remap)
+Terminal::set_swap_alt_and_ctrl(bool remap)
 {
-        if (remap == m_mac_modifier_remap)
+        if (remap == m_swap_alt_and_ctrl)
                 return false;
 
-        m_mac_modifier_remap = remap;
+        m_swap_alt_and_ctrl = remap;
         return true;
 }
 

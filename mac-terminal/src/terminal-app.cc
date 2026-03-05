@@ -41,6 +41,7 @@
 #include "terminal-defines.hh"
 #include "terminal-libgsystem.hh"
 
+#include <vte/vte.h>
 #include <handy.h>
 
 #ifdef TERMINAL_SERVER
@@ -942,6 +943,30 @@ terminal_app_startup (GApplication *application)
   _terminal_debug_print (TERMINAL_DEBUG_SERVER, "Startup complete\n");
 }
 
+static void
+terminal_app_mac_modifier_remap_changed_cb (TerminalApp *app,
+                                            const char  *key,
+                                            GSettings   *settings)
+{
+  gboolean enabled = g_settings_get_boolean (settings, TERMINAL_SETTING_MAC_MODIFIER_REMAP_KEY);
+  terminal_accels_set_mac_modifier_remap (enabled);
+
+#ifdef TERMINAL_SERVER
+  /* Update VTE property on all existing screens in all windows */
+  GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
+  for (GList *w = windows; w != nullptr; w = w->next) {
+    if (!TERMINAL_IS_WINDOW (w->data))
+      continue;
+    TerminalWindow *window = TERMINAL_WINDOW (w->data);
+    gs_free_list GList *containers = terminal_window_list_screen_containers (window);
+    for (GList *c = containers; c != nullptr; c = c->next) {
+      TerminalScreen *screen = terminal_screen_container_get_screen (TERMINAL_SCREEN_CONTAINER (c->data));
+      vte_terminal_set_swap_alt_and_ctrl (VTE_TERMINAL (screen), enabled);
+    }
+  }
+#endif
+}
+
 /* GObjectClass impl */
 
 static void
@@ -1077,6 +1102,15 @@ terminal_app_constructed(GObject *object)
                                       TERMINAL_KEYBINDINGS_SCHEMA,
                                       TERMINAL_KEYBINDINGS_SCHEMA_PATH);
   terminal_accels_init (G_APPLICATION (app), settings, app->use_headerbar);
+
+  /* Mac modifier remap: apply initial value and monitor changes */
+  terminal_accels_set_mac_modifier_remap (
+    g_settings_get_boolean (app->global_settings, TERMINAL_SETTING_MAC_MODIFIER_REMAP_KEY));
+
+  g_signal_connect_swapped (app->global_settings,
+                            "changed::" TERMINAL_SETTING_MAC_MODIFIER_REMAP_KEY,
+                            G_CALLBACK (terminal_app_mac_modifier_remap_changed_cb),
+                            app);
 }
 
 static void
